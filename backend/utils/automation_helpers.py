@@ -6,9 +6,10 @@ import os
 import time
 import random
 from typing import Dict, List, Any, Optional, Callable
-import logging
 
-logger = logging.getLogger(__name__)
+from utils.logger import setup_logger
+
+logger = setup_logger(__name__)
 
 def add_human_delay(min_seconds: float = 0.5, max_seconds: float = 3.0) -> None:
     """

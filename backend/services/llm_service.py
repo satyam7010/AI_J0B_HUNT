@@ -9,9 +9,9 @@ import aiohttp
 import asyncio
 from typing import Dict, List, Any, Optional, Union
 
-from ..config.settings import settings
-from ..utils.logger import setup_logger
-from ..utils.automation_helpers import retry_operation
+from config.settings import settings
+from utils.logger import setup_logger
+from utils.automation_helpers import retry_operation
 
 logger = setup_logger(__name__)
 

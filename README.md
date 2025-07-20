@@ -13,13 +13,11 @@ An AI-powered job application automation system that uses Gemma 3.4b model via O
   - [Web Dashboard](#web-dashboard)
   - [Complete Workflow](#complete-workflow)
 - [Architecture](#architecture)
+- [Project Structure](#project-structure)
 - [AI Features](#ai-features)
 - [Advanced Features](#advanced-features)
-- [Ollama Setup](#ollama-setup)
-- [Prompt Templates](#prompt-templates)
+- [Documentation](#documentation)
 - [Troubleshooting](#troubleshooting)
-- [Best Practices](#best-practices)
-- [Security Considerations](#security-considerations)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -110,82 +108,53 @@ cp .env.example .env
 
 ## Configuration
 
-### Environment Variables
+For detailed configuration options, see the [Configuration Guide](backend/docs/configuration.md).
+
+### Basic Configuration
 Edit the `.env` file with your preferences:
 
 ```env
-# Ollama Configuration
-OLLAMA_API_URL=http://localhost:11434
-GEMMA_MODEL=gemma:3.4b
+# Database
+DATABASE_URL=sqlite:///job_applications.db
 
-# Job Portal Credentials
+# LLM Configuration
+LLM_PROVIDER=ollama  # Options: ollama, openai
+LLM_MODEL=gemma:3.4b  # For Ollama
+
+# API
+API_HOST=0.0.0.0
+API_PORT=8000
+
+# Frontend
+FRONTEND_PORT=8501
+
+# Job Portal Credentials (optional)
 LINKEDIN_EMAIL=your_email@example.com
 LINKEDIN_PASSWORD=your_password
 INDEED_EMAIL=your_email@example.com
 INDEED_PASSWORD=your_password
-NAUKRI_EMAIL=your_email@example.com
-NAUKRI_PASSWORD=your_password
-
-# Application Settings
-MAX_APPLICATIONS_PER_DAY=5
-AUTO_APPLY_ENABLED=false
-MANUAL_APPROVAL_REQUIRED=true
-
-# Logging
-LOG_LEVEL=INFO
-LOG_FILE=logs/application.log
-
-# Schedule Settings (optional)
-SCHEDULE_ENABLED=false
-SCHEDULE_TIME=08:00
 ```
-
-### Job Search Criteria
-Configure in Settings tab of the dashboard or directly in the database:
-- **Job Titles**: Target positions
-- **Skills**: Required technical skills
-- **Locations**: Preferred work locations
-- **Experience Level**: entry, mid, senior, executive
-- **Job Type**: full_time, part_time, remote, hybrid
-- **Salary Range**: Minimum and maximum salary expectations
 
 ## Usage
 
 ### Command-line Interface
 
-The system provides a user-friendly command-line interface:
+The system provides several entry points:
 
 ```bash
+# Run both backend and frontend
 python main.py
-```
 
-This will present you with the following options:
+# Run backend only
+python run_backend.bat
 
-1. Upload and parse resume
-2. Analyze job description
-3. Optimize resume with AI
-4. Run automation
-5. View dashboard
-6. Exit
-
-### Web Dashboard
-
-You can also use the Streamlit web dashboard for a more visual experience:
-
-```bash
+# Run frontend dashboard only
 python run_dashboard.py
 ```
 
-This will start the Streamlit server and you can access the dashboard by opening http://localhost:8501 in your web browser.
+### Web Dashboard
 
-> **Note:** If you encounter any issues running the dashboard script, you can run Streamlit directly:
-> ```bash
-> # On Windows
-> python -m streamlit run src\dashboard.py
-> 
-> # On macOS/Linux
-> python -m streamlit run src/dashboard.py
-> ```
+You can access the Streamlit web dashboard by opening http://localhost:8501 in your web browser.
 
 #### Dashboard Sections
 
@@ -247,19 +216,91 @@ The system will:
 
 ## Architecture
 
-- `main.py` - Main application entry point
-- `src/` - Core application modules
-  - `resume_parser.py` - Resume parsing and extraction
-  - `job_analyzer.py` - Job description analysis
-  - `ai_optimizer.py` - AI-powered resume optimization
-  - `job_applier.py` - Automated job applications
-  - `database.py` - Database operations
-  - `dashboard.py` - Web dashboard
-  - `prompt_template.py` - AI prompt templates
-- `data/` - Data storage
-- `templates/` - HTML templates
-- `static/` - Static assets
-- `logs/` - Application logs
+The AI Job Hunt system follows a modular architecture with two main components:
+
+- **Backend** - Core API, agents, and services
+- **Frontend** - Web dashboard for user interaction
+
+## Project Structure
+
+The project is organized into two main directories:
+
+```
+AI_JOB_HUNT/
+├── README.md           - Main documentation
+├── .env                - Environment variables
+├── .gitignore          - Git ignore rules
+├── main.py             - Main entry point
+├── run_backend.bat     - Backend launcher
+├── run_dashboard.py    - Dashboard launcher
+├── requirements.txt    - Python dependencies
+├── backend/            - Backend API and services
+│   ├── main.py         - Backend entry point
+│   ├── agents/         - AI agents (resume optimizer, job analyzer)
+│   │   ├── __init__.py
+│   │   ├── application_agent.py
+│   │   ├── job_description_agent.py
+│   │   └── resume_optimizer_agent.py
+│   ├── api/            - API routes and controllers
+│   │   ├── __init__.py
+│   │   ├── apply_routes.py
+│   │   ├── dashboard_routes.py
+│   │   ├── job_routes.py
+│   │   └── resume_routes.py
+│   ├── config/         - Configuration settings
+│   │   ├── __init__.py
+│   │   └── settings.py
+│   ├── docs/           - Documentation
+│   │   ├── README.md
+│   │   ├── api-reference.md
+│   │   ├── architecture.md
+│   │   ├── configuration.md
+│   │   ├── database-schema.md
+│   │   └── deployment.md
+│   ├── examples/       - Example scripts
+│   │   ├── README.md
+│   │   └── example_usage.py
+│   ├── models/         - Data models
+│   │   ├── application.py
+│   │   ├── job.py
+│   │   └── resume.py
+│   ├── prompts/        - AI prompt templates
+│   │   ├── __init__.py
+│   │   ├── job_prompts.py
+│   │   └── resume_prompts.py
+│   ├── services/       - Core services
+│   │   ├── __init__.py
+│   │   ├── application_engine.py
+│   │   ├── db_manager.py
+│   │   ├── job_scraper.py
+│   │   ├── llm_service.py
+│   │   └── resume_parser.py
+│   ├── tests/          - Backend tests
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   ├── test_llm_service.py
+│   │   └── test_resume_optimizer_agent.py
+│   └── utils/          - Utility functions
+│       ├── __init__.py
+│       ├── automation_helpers.py
+│       ├── file_utils.py
+│       └── logger.py
+├── data/               - Data storage
+│   └── examples/       - Example data files
+│       ├── sample_job_description.txt
+│       └── sample_resume.txt
+├── frontend/           - Frontend dashboard
+│   ├── public/         - Public assets
+│   └── src/            - Frontend source code
+│       ├── assets/     - Static assets
+│       ├── components/ - UI components
+│       ├── hooks/      - React hooks
+│       ├── pages/      - Page components
+│       └── services/   - Frontend services
+├── logs/               - Application logs
+│   └── application.log
+└── job_applications.db - SQLite database
+```
 
 ## AI Features
 
@@ -297,6 +338,18 @@ Configure scheduled job searches in the dashboard or by editing the `.env` file:
 ```
 # Schedule Settings
 SCHEDULE_ENABLED=true
+SCHEDULE_TIME=08:00
+```
+
+## Documentation
+
+Comprehensive documentation is available in the `backend/docs/` directory:
+
+- [API Reference](backend/docs/api-reference.md) - API endpoint documentation
+- [Architecture](backend/docs/architecture.md) - System architecture overview
+- [Configuration](backend/docs/configuration.md) - Detailed configuration options
+- [Database Schema](backend/docs/database-schema.md) - Database structure
+- [Deployment](backend/docs/deployment.md) - Deployment instructions
 SCHEDULE_TIME=08:00
 ```
 

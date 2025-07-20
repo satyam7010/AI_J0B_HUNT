@@ -5,9 +5,9 @@ Job-related API routes
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 
-from models.job import JobResponse, JobCreate, JobAnalysisResponse
-from services.job_scraper import JobScraper
-from agents.job_description_agent import JobDescriptionAnalysisAgent
+from backend.models.job import JobResponse, JobCreate, JobAnalysisResponse
+from backend.services.job_scraper import JobScraper
+from backend.agents.job_description_agent import JobDescriptionAnalysisAgent
 
 router = APIRouter()
 job_scraper = JobScraper()

@@ -3,17 +3,18 @@ Job Description Analysis Agent for AI Job Hunt system
 """
 
 import logging
+import re
 from typing import Dict, List, Any, Optional, Union
 import asyncio
 
-from ..config.settings import settings
-from ..utils.logger import setup_logger
-from ..services.llm_service import LLMService
-from ..prompts.job_prompts import JOB_ANALYSIS_PROMPT
+from config.settings import settings
+from utils.logger import setup_logger
+from services.llm_service import LLMService
+from backend.prompts.job_prompts import JOB_ANALYSIS_PROMPT
 
 logger = setup_logger(__name__)
 
-class JobDescriptionAnalysisAgent:
+class JobDescriptionAgent:
     """
     Agent responsible for analyzing job descriptions to extract key information,
     skills, requirements, and suitability for the candidate
@@ -99,10 +100,13 @@ class JobDescriptionAnalysisAgent:
             "education_requirements": [],
             "job_responsibilities": [],
             "match_score": 0.0,
-            "missing_skills": [],
-            "matching_skills": [],
-            "application_recommendations": "",
-            "keywords": []
+            "match_reasons": [],
+            "gap_areas": [],
+            "salary_range": "",
+            "location": "",
+            "employment_type": "",
+            "keywords": [],
+            "analysis_summary": ""
         }
         
         # Simple parsing based on section headers
@@ -122,7 +126,7 @@ class JobDescriptionAnalysisAgent:
             content = lines[1].strip()
             
             # Map to result structure
-            if "job title" in title:
+            if "title" in title:
                 result["title"] = content
             elif "company" in title:
                 result["company"] = content
@@ -138,15 +142,15 @@ class JobDescriptionAnalysisAgent:
                     for skill in content.split("-") 
                     if skill.strip()
                 ]
-            elif "experience level" in title:
+            elif "experience" in title:
                 result["experience_level"] = content
             elif "education" in title:
                 result["education_requirements"] = [
-                    edu.strip() 
-                    for edu in content.split("-") 
-                    if edu.strip()
+                    req.strip() 
+                    for req in content.split("-") 
+                    if req.strip()
                 ]
-            elif "responsibilities" in title:
+            elif "responsibilities" in title or "duties" in title:
                 result["job_responsibilities"] = [
                     resp.strip() 
                     for resp in content.split("-") 
@@ -155,32 +159,36 @@ class JobDescriptionAnalysisAgent:
             elif "match score" in title:
                 try:
                     # Extract just the number
-                    import re
                     score_match = re.search(r'(\d+(\.\d+)?)', content)
                     if score_match:
                         result["match_score"] = float(score_match.group(1))
-                except ValueError:
-                    # If conversion fails, keep default
+                except (ValueError, AttributeError):
                     pass
-            elif "missing skills" in title:
-                result["missing_skills"] = [
-                    skill.strip() 
-                    for skill in content.split(",") 
-                    if skill.strip()
+            elif "match reasons" in title:
+                result["match_reasons"] = [
+                    reason.strip() 
+                    for reason in content.split("-") 
+                    if reason.strip()
                 ]
-            elif "matching skills" in title:
-                result["matching_skills"] = [
-                    skill.strip() 
-                    for skill in content.split(",") 
-                    if skill.strip()
+            elif "gap areas" in title:
+                result["gap_areas"] = [
+                    gap.strip() 
+                    for gap in content.split("-") 
+                    if gap.strip()
                 ]
-            elif "recommendations" in title:
-                result["application_recommendations"] = content
+            elif "salary" in title:
+                result["salary_range"] = content
+            elif "location" in title:
+                result["location"] = content
+            elif "employment type" in title:
+                result["employment_type"] = content
             elif "keywords" in title:
                 result["keywords"] = [
                     keyword.strip() 
                     for keyword in content.split(",") 
                     if keyword.strip()
                 ]
-        
+            elif "summary" in title:
+                result["analysis_summary"] = content
+                
         return result

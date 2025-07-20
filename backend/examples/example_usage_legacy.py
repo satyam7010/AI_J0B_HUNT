@@ -9,14 +9,14 @@ import os
 import sys
 from pathlib import Path
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+# Add backend to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from frontend.src.database import DatabaseManager
-from src.resume_parser import ResumeParser
-from src.job_analyzer import JobAnalyzer
-from src.ai_optimizer import AIOptimizer
-from src.job_applier import JobApplier
+from backend.services.db_manager import DatabaseManager
+from backend.services.resume_parser import ResumeParser
+from backend.agents.job_description_agent import JobDescriptionAgent
+from backend.agents.resume_optimizer_agent import ResumeOptimizerAgent
+from backend.agents.application_agent import ApplicationAgent
 
 async def example_workflow():
     """Example workflow demonstrating the complete job application process"""
@@ -27,9 +27,9 @@ async def example_workflow():
     # Initialize components
     db = DatabaseManager()
     resume_parser = ResumeParser()
-    job_analyzer = JobAnalyzer()
-    ai_optimizer = AIOptimizer()
-    job_applier = JobApplier()
+    job_analyzer = JobDescriptionAgent()
+    resume_optimizer = ResumeOptimizerAgent()
+    application_agent = ApplicationAgent()
     
     # Initialize database
     db.init_db()

@@ -7,34 +7,39 @@ import os
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+import uvicorn
 
 # Load environment variables
 load_dotenv()
 
 # Import API routers
-from api.resume_routes import router as resume_router
-from api.job_routes import router as job_router
-from api.apply_routes import router as apply_router
-from api.dashboard_routes import router as dashboard_router
+from backend.api.resume_routes import router as resume_router
+from backend.api.job_routes import router as job_router
+from backend.api.apply_routes import router as apply_router
+from backend.api.dashboard_routes import router as dashboard_router
 
 # Configure logging
-from utils.logger import setup_logger
+from backend.utils.logger import setup_logger
+logger = setup_logger()
 logger = setup_logger()
 
 # Create FastAPI app
 app = FastAPI(
     title="AI Job Hunt API",
     description="API for AI-powered job application automation system",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with actual frontend origin
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
 )
 
 # Include routers

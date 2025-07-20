@@ -10,9 +10,9 @@ from fastapi import UploadFile
 import json
 from datetime import datetime
 
-from ..utils.file_utils import save_upload_file_temp, extract_text_from_file
-from ..utils.logger import setup_logger
-from ..config.settings import settings
+from backend.utils.file_utils import save_upload_file_temp, extract_text_from_file
+from backend.utils.logger import setup_logger
+from backend.config.settings import settings
 
 logger = setup_logger(__name__)
 

@@ -48,21 +48,19 @@ class ApplicationActivity(BaseModel):
     application_id: int
     activity_type: str  # status_change, note_added, follow_up, etc.
     timestamp: datetime
-    details: Dict[str, Any]
-    user_id: Optional[int] = None
+    details: Dict[str, Any] = {}
+    
+    class Config:
+        orm_mode = True
 
 class CoverLetterRequest(BaseModel):
     """Cover letter generation request model"""
     resume_id: int
     job_id: int
-    company_info: Optional[str] = None
-    hiring_manager: Optional[str] = None
-    additional_context: Optional[str] = None
-
+    style: Optional[str] = "professional"  # professional, creative, technical, etc.
+    
 class CoverLetterResponse(BaseModel):
     """Cover letter response model"""
     id: int
-    resume_id: int
-    job_id: int
     content: str
     created_at: datetime

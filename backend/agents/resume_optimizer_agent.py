@@ -10,11 +10,11 @@ import re
 import subprocess
 from pathlib import Path
 
-from ..config.settings import settings
-from ..utils.logger import setup_logger
-from ..utils.file_utils import ensure_directory
-from ..services.llm_service import LLMService
-from ..prompts.resume_prompts import RESUME_OPTIMIZATION_PROMPT, LATEX_RESUME_PROMPT
+from config.settings import settings
+from utils.logger import setup_logger
+from utils.file_utils import ensure_directory
+from services.llm_service import LLMService
+from prompts.resume_prompts import RESUME_OPTIMIZATION_PROMPT, LATEX_RESUME_PROMPT
 
 logger = setup_logger(__name__)
 

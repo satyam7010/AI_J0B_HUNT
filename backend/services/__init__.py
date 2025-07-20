@@ -1,5 +1,5 @@
 """
-Services module for AI Job Hunt system
+Services module initialization
 """
 
 from .llm_service import LLMService

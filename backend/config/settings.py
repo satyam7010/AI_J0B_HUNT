@@ -11,7 +11,7 @@ from pydantic import Field
 class OllamaSettings(BaseSettings):
     """Ollama LLM settings"""
     api_url: str = Field(default="http://localhost:11434/api")
-    model_name: str = Field(default="llama3")
+    model_name: str = Field(default="gemma:3.4b")
     temperature: float = Field(default=0.7)
     top_p: float = Field(default=0.9)
     max_tokens: int = Field(default=2048)
@@ -19,6 +19,8 @@ class OllamaSettings(BaseSettings):
     
     class Config:
         env_prefix = "OLLAMA_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class OpenAISettings(BaseSettings):
     """OpenAI API settings"""
@@ -31,14 +33,18 @@ class OpenAISettings(BaseSettings):
     
     class Config:
         env_prefix = "OPENAI_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class DatabaseSettings(BaseSettings):
     """Database settings"""
-    url: str = Field(default="sqlite:///data/aijobhunt.db")
+    url: str = Field(default="sqlite:///job_applications.db")
     connect_args: Dict[str, Any] = Field(default={"check_same_thread": False})
     
     class Config:
         env_prefix = "DB_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class PathSettings(BaseSettings):
     """Path settings"""
@@ -49,6 +55,8 @@ class PathSettings(BaseSettings):
     
     class Config:
         env_prefix = "PATH_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class ApplicationSettings(BaseSettings):
     """Application behavior settings"""
@@ -60,6 +68,8 @@ class ApplicationSettings(BaseSettings):
     
     class Config:
         env_prefix = "APP_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class ResumeSettings(BaseSettings):
     """Resume generator settings"""
@@ -69,6 +79,8 @@ class ResumeSettings(BaseSettings):
     
     class Config:
         env_prefix = "RESUME_"
+        env_file = ".env"
+        extra = "ignore"  # Allow extra fields from env
 
 class Settings(BaseSettings):
     """Main application settings"""
@@ -104,6 +116,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"  # Allow extra fields from env
 
 # Create global settings instance
 settings = Settings()

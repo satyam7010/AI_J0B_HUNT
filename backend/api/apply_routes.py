@@ -5,8 +5,8 @@ Application-related API routes
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List, Optional
 
-from models.application import ApplicationResponse, ApplicationCreate, ApplicationStatusUpdate
-from services.application_engine import ApplicationEngine
+from backend.models.application import ApplicationResponse, ApplicationCreate, ApplicationStatusUpdate
+from backend.services.application_engine import ApplicationEngine
 
 router = APIRouter()
 application_engine = ApplicationEngine()

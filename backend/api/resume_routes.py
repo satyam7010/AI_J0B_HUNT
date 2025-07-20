@@ -5,9 +5,9 @@ Resume-related API routes
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form
 from typing import List, Optional
 
-from models.resume import ResumeResponse, ResumeCreate
-from services.resume_parser import ResumeParser
-from agents.resume_optimizer_agent import ResumeOptimizerAgent
+from backend.models.resume import ResumeResponse, ResumeCreate
+from backend.services.resume_parser import ResumeParser
+from backend.agents.resume_optimizer_agent import ResumeOptimizerAgent
 
 router = APIRouter()
 resume_parser = ResumeParser()
